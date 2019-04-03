@@ -1,0 +1,17 @@
+{
+    "name": "com.chupakaber.navmesh3d",
+    "author": "Chupakaber",
+    "displayName": "NavMesh3D",
+    "description": "Voxel navigation mesh & pathfinding algorithm modified third-dimensional A* from Chupakaber's library",
+    "unity": "2018.3",
+    "version": "0.0.1",
+    "keywords": [
+        "astar",
+		"pathfinding"
+    ],
+    "dependencies": {},
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/chupakaber/navmesh3d.git"
+    }
+}
