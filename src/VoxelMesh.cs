@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ChupakaberGames.NavMesh3D {
 
-    public class QuadTree {
+    public class VoxelMesh {
 
         public Vector3 Size {
             get {
@@ -24,13 +24,13 @@ namespace ChupakaberGames.NavMesh3D {
             }
         }
 
-        public int CornersCap {
+        public int MaxCorners {
             get {
-                return _cornersCap;
+                return _maxCorners;
             }
             set {
                 if (value > 0) {
-                    _cornersCap = value;
+                    _maxCorners = value;
                 }
             }
         }
@@ -41,7 +41,7 @@ namespace ChupakaberGames.NavMesh3D {
         private Vector3 _origin;
         private float _leafSize;
         private int[] _graphSize = new int[3];
-        private int _cornersCap = 1000;
+        private int _maxCorners = 1000;
 
         // Internal collections
 
@@ -199,7 +199,7 @@ namespace ChupakaberGames.NavMesh3D {
             cornersCount = 0;
             while (FillLeaf(originLeaf, destinationLeaf, _searchingList, cornersCount)) {
                 cornersCount++;
-                if (cornersCount > _cornersCap) {
+                if (cornersCount > _maxCorners) {
                     throw new Exception("NavMesh3D. Corners count overflow");
                 }
             }
