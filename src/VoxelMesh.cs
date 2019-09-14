@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -51,12 +52,12 @@ namespace ChupakaberGames.NavMesh3D {
         internal int[] _indexes = new int[26];
 
         /// <summary> 
-        /// Create a navmesh3d from current scene environment
+        /// Create a VoxelMesh from current scene environment
         /// </summary>
         /// <param name="size">Three dimensional NavMesh3D size of space in unity units.</param>
         /// <param name="origin">Origin - minor corner of NavMesh3D space in unity units. Default is -0.5 of size</param>
         /// <param name="leafSize">Size of NavMesh3D minimum node in unity units.</param>
-        public void Bake(Vector3 size, Vector3 origin, float leafSize) {
+        public IEnumerator Bake(Vector3 size, Vector3 origin, float leafSize) {
             if (leafSize <= 0.0f) {
                 throw new Exception("Size of NavMesh3D leaf must be non negative.");
             }
@@ -73,6 +74,7 @@ namespace ChupakaberGames.NavMesh3D {
             _leafs = new Leaf[_graphSize[0] * _graphSize[1] * _graphSize[2]];
             var leafHalfExtents = new Vector3(_leafSize / 2.0f, _leafSize / 2.0f, _leafSize / 2.0f);
             for (int i = 0; i < _size.x / _leafSize; i++) {
+                yield return null;
                 for (int j = 0; j < _size.y / _leafSize; j++) {
                     for (int k = 0; k < _size.z / _leafSize; k++) {
                         var leaf = new Leaf();
@@ -126,7 +128,34 @@ namespace ChupakaberGames.NavMesh3D {
         }
 
         /// <summary> 
-        /// Create a navmesh3d from current scene environment
+        /// Serialize VoxelMesh into byte array
+        /// </summary>
+        public byte[] Serialize() {
+            var sx = (int) (_size.x / _leafSize);
+            var sy = (int) (_size.y / _leafSize);
+            var sz = (int) (_size.z / _leafSize);
+            byte[] data = new byte[28 + sx * sy * sz * 4 * 5];
+            _size = new Vector3();
+            _origin = new Vector3();
+            Buffer.BlockCopy(BitConverter.GetBytes(_size.x), 0, data, 0, 4);
+            Buffer.BlockCopy(BitConverter.GetBytes(_size.y), 0, data, 4, 4);
+            Buffer.BlockCopy(BitConverter.GetBytes(_size.z), 0, data, 8, 4);
+            Buffer.BlockCopy(BitConverter.GetBytes(_origin.x), 0, data, 12, 4);
+            Buffer.BlockCopy(BitConverter.GetBytes(_origin.y), 0, data, 16, 4);
+            Buffer.BlockCopy(BitConverter.GetBytes(_origin.z), 0, data, 20, 4);
+            Buffer.BlockCopy(BitConverter.GetBytes(_leafSize), 0, data, 24, 4);
+            for (var i = 0; i < sx; i++) {
+                for (var j = 0; j < sy; j++) {
+                    for (var k = 0; k < sz; k++) {
+                        
+                    }
+                }
+            }
+            return data;
+        }
+
+        /// <summary> 
+        /// Load a VoxelMesh from byte array
         /// </summary>
         /// <returns>int value</returns>
         public bool Load(byte[] data) {
